@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+$grey: #1a1a1a;
+$red: #8C2B2D;
+$hover-red: #B34042;
+.AppHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2em;
+    color: $grey;
+    flex-direction: column;
+    font-family: "Gowun Dodum", sans-serif;
+
+    h1 {
+        margin: 1em 0em;
+        font-weight: 500;
+        font-style: normal;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 1em;
+
+        a {
+            color: $red;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+                color: $hover-red;
+            }
+        }
+    }
+}

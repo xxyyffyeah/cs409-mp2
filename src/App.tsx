@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link
+} from "react-router-dom";
+import styles from './App.module.scss';
+import List from './pages/List';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className={styles.AppHeader}>
+          <h1 className="title">Art Institute of Chicago Gallery Website</h1>
+          <ul>
+            <li>
+              <Link to="/">Search</Link>
+            </li>
+            <li>
+              <Link to="/gallery">Gallery</Link>
+            </li>
+          </ul>
+        </header>
+        <Routes>
+          <Route path="/" element={<List />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/details" element={<Details />} />
+        </Routes>
+      </div>
+    </Router>
+
   );
 }
 
+function Details() {
+  return <h2>Details</h2>;
+}
+
+function Gallery() {
+  return <h2>Gallery</h2>;
+}
 export default App;
