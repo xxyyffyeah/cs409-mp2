@@ -1,4 +1,4 @@
-import { on } from "events";
+import styles from "./SearchModule.module.scss";
 
 interface SearchModuleProps {
   query: string;
@@ -11,7 +11,7 @@ interface SearchModuleProps {
 }
 const SearchBar: React.FC<SearchModuleProps> = ({ query, onQueryChange, placeholder, onSortByChange, sortBy , selectedOrder, onOrderChange}) => {
   return (
-    <div className="search-bar">
+    <div className={styles.searchBar}>
       <input
         type="text"
         placeholder={placeholder}
@@ -19,7 +19,7 @@ const SearchBar: React.FC<SearchModuleProps> = ({ query, onQueryChange, placehol
         onChange={onQueryChange}
       />
       <select name="Sort by" id="sort-by" value={sortBy} onChange={onSortByChange}>
-        <option value="id">ID</option>
+        <option value="ID">ID</option>
         <option value="title">Title</option>
         <option value="artist">Artist</option>
         <option value="year">Year</option>
@@ -45,7 +45,7 @@ const SearchBar: React.FC<SearchModuleProps> = ({ query, onQueryChange, placehol
           onChange={onOrderChange}
         />
         descending
-      </label>  
+      </label>
     </div>
 
   );

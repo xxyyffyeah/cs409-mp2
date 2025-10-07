@@ -3,15 +3,10 @@ import React, { useState, useEffect } from "react";
 import { ArtWork } from "./types";
 import { SortBy } from "./types";
 import { Order } from "./types";
-
-const mockArtData: ArtWork[] = [
-  { id: 1, title: 'Starry Night', artist: 'Vincent van Gogh', year: 1889 },
-  { id: 2, title: 'The Mona Lisa', artist: 'Leonardo da Vinci', year: 1503 },
-  { id: 3, title: 'The Persistence of Memory', artist: 'Salvador Dalí', year: 1931 },
-  { id: 4, title: 'The Girl with a Pearl Earring', artist: 'Johannes Vermeer', year: 1665 },
-  { id: 5, title: 'The Night Watch', artist: 'Rembrandt van Rijn', year: 1642 },
-  { id: 6, title: 'A Sunday Afternoon on the Island of La Grande Jatte', artist: 'Georges Seurat', year: 1884 },
-];
+import { searchArtworks } from "../services/ArtInstituteChicagoAPI";
+import styles from "./SearchModule.module.scss";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 interface SeachResultsProps {
@@ -22,22 +17,36 @@ const SearchResults: React.FC<SeachResultsProps> = ({ results }) => {
     return null;
   }
   return (
-    <ul>
-      {
-        results.map(item =>
-        (
-          <li key={item.id}>
-            {item.id}: {item.title} by {item.artist} ({item.year})
-          </li>
-        )
-        )
-      }
-    </ul>
+    <div className={styles.searchResults}>
+      <ul>
+        {
+          results.map(item =>
+          (
+            <Link to={`/details/${item.id}`} key={item.id} className={styles.resultLink}>
+              <li key={item.id}>
+                {item.thumbnailUrl && (
+                  <img
+                    src={item.thumbnailUrl}
+                    alt={item.title}
+                    className={styles.thumbnail}
+                  />
+                )}
+                <div className={styles.artworkInfo}>
+                  <strong>{item.title}</strong> by {item.artist} ({item.year})
+                  <div className={styles.artworkId}>ID: {item.id}</div>
+                </div>
+              </li>
+            </Link>
+          )
+          )
+        }
+      </ul>
+    </div>
   );
 }
 function SearchModule() {
   const [query, setQuery] = useState<string>("");
-  const [results, setResults] = useState<ArtWork[]>(mockArtData);
+  const [results, setResults] = useState<ArtWork[]>([]);
   const [sortBy, setSortBy] = useState<SortBy>("ID");
   const [selectedOrder, setSelectedOrder] = useState<Order>('ascending');
   const onQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,47 +59,63 @@ function SearchModule() {
     setSelectedOrder(e.target.value as Order);
   }
   const sortedResults = [...results].sort((a, b) => {
-  let comparison = 0;
-  switch (sortBy) {
-    case 'title':
-      comparison = a.title.localeCompare(b.title);
-      break;
-    case 'artist':
-      comparison = a.artist.localeCompare(b.artist);
-      break;
-    case 'year':
-      comparison = a.year - b.year;
-      break;
-    case 'ID':
-    default:
-      comparison = a.id - b.id;
-  }
-  return selectedOrder === 'ascending' ? comparison : -comparison;
-});
+    let comparison = 0;
+    switch (sortBy) {
+      case 'title':
+        comparison = a.title.localeCompare(b.title);
+        break;
+      case 'artist':
+        comparison = a.artist.localeCompare(b.artist);
+        break;
+      case 'year':
+        comparison = a.year - b.year;
+        break;
+      case 'ID':
+      default:
+        comparison = a.id - b.id;
+    }
+    return selectedOrder === 'ascending' ? comparison : -comparison;
+  });
+
+
+  // useEffect(() => {
+  //   setSearchResults(sortedResults);
+  // }, [sortedResults, setSearchResults]);
   useEffect(() => {
     if (query.trim() === "") {
       setResults([]);
       return;
     }
-    const lowerQuery = query.toLowerCase();
-    const filtered = mockArtData.filter(item =>
-      item.title.toLowerCase().includes(lowerQuery) ||
-      item.artist.toLowerCase().includes(lowerQuery) ||
-      item.year.toString().includes(lowerQuery)
-    );
-    setResults(filtered);
+    const abortController = new AbortController();
+    const fetchResults = async () => {
+      try {
+        const artworks = await searchArtworks(query, abortController.signal);
+        console.log('Fetched artworks:', artworks);
+        setResults(artworks);
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled:', error.message);
+        } else {
+          console.error('There was a problem with the Axios operation:', error);
+        }
+      }
+    };
+    fetchResults();
+    return () => {
+      abortController.abort();
+    };
   }, [query]);
 
   return (
-    <div className="search-module">
+    <div className={styles.searchModule}>
       <SearchBar
         query={query}
         onQueryChange={onQueryChange}
-        placeholder="Search by title, year or artist."
+        placeholder="Search by title or artist."
         onSortByChange={onSortByChange}
-        sortBy={sortBy} 
+        sortBy={sortBy}
         selectedOrder={selectedOrder}
-        onOrderChange={onOrderChange}/>
+        onOrderChange={onOrderChange} />
       <SearchResults
         results={sortedResults} />
     </div>

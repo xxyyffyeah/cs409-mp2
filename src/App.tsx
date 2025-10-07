@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import styles from './App.module.scss';
 import List from './pages/List';
+import Details from './pages/Details';
+
 
 function App() {
   return (
@@ -25,7 +27,7 @@ function App() {
         <Routes>
           <Route path="/" element={<List />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/details" element={<Details />} />
+          <Route path="/details/:id" element={<Details />} />
         </Routes>
       </div>
     </Router>
@@ -33,9 +35,6 @@ function App() {
   );
 }
 
-function Details() {
-  return <h2>Details</h2>;
-}
 
 function Gallery() {
   return <h2>Gallery</h2>;
