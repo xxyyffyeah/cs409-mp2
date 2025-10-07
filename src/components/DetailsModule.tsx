@@ -3,25 +3,28 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getArtworkById } from '../services/ArtInstituteChicagoAPIbyID';
 import { ArtWorkDetail } from './types';
 import styles from './DetailsModule.module.scss';
+import {useSearchResults} from "../contexts/context";
 
 function DetailsModule() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [artwork, setArtwork] = useState<ArtWorkDetail | null>(null);
+  const { searchResults } = useSearchResults();
 
   const currentId = id ? parseInt(id) : 0;
-  const nextArtwork = {id: currentId + 1, title: ''}; // Placeholder for next artwork};
-  const previousArtwork = {id: currentId - 1 > 0 ? currentId - 1 : null, title: ''}; // Placeholder for previous artwork};
-
+  const currentIndex = searchResults.findIndex(item => item.id === currentId);
+  const nextArtwork = currentIndex < searchResults.length - 1 ? searchResults[currentIndex + 1].id : null;
+  const previousArtwork = currentIndex > 0 ? searchResults[currentIndex - 1].id : null;
+  
   const handleNext = () => {
     if (nextArtwork) {
-      navigate(`/details/${nextArtwork.id}`);
+      navigate(`/details/${nextArtwork}`);
     }
   };
 
   const handlePrevious = () => {
     if (previousArtwork) {
-      navigate(`/details/${previousArtwork.id}`);
+      navigate(`/details/${previousArtwork}`);
     }
   };
 

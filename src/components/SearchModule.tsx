@@ -1,5 +1,5 @@
 import SearchBar from "./SearchBar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ArtWork } from "./types";
 import { SortBy } from "./types";
 import { Order } from "./types";
@@ -7,6 +7,7 @@ import { searchArtworks } from "../services/ArtInstituteChicagoAPI";
 import styles from "./SearchModule.module.scss";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSearchResults } from "../contexts/context";
 
 
 interface SeachResultsProps {
@@ -45,6 +46,7 @@ const SearchResults: React.FC<SeachResultsProps> = ({ results }) => {
   );
 }
 function SearchModule() {
+  const { setSearchResults } = useSearchResults();
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<ArtWork[]>([]);
   const [sortBy, setSortBy] = useState<SortBy>("ID");
@@ -58,29 +60,31 @@ function SearchModule() {
   const onOrderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOrder(e.target.value as Order);
   }
-  const sortedResults = [...results].sort((a, b) => {
-    let comparison = 0;
-    switch (sortBy) {
-      case 'title':
-        comparison = a.title.localeCompare(b.title);
-        break;
-      case 'artist':
-        comparison = a.artist.localeCompare(b.artist);
-        break;
-      case 'year':
-        comparison = a.year - b.year;
-        break;
-      case 'ID':
-      default:
-        comparison = a.id - b.id;
-    }
-    return selectedOrder === 'ascending' ? comparison : -comparison;
-  });
 
+  const sortedResults = useMemo(() => {
+    return [...results].sort((a, b) => {
+      let comparison = 0;
+      switch (sortBy) {
+        case 'title':
+          comparison = a.title.localeCompare(b.title);
+          break;
+        case 'artist':
+          comparison = a.artist.localeCompare(b.artist);
+          break;
+        case 'year':
+          comparison = a.year - b.year;
+          break;
+        case 'ID':
+        default:
+          comparison = a.id - b.id;
+      }
+      return selectedOrder === 'ascending' ? comparison : -comparison;
+    });
+  }, [results, sortBy, selectedOrder]);
 
-  // useEffect(() => {
-  //   setSearchResults(sortedResults);
-  // }, [sortedResults, setSearchResults]);
+  useEffect(() => {
+    setSearchResults(sortedResults);
+  }, [sortedResults, setSearchResults]);
   useEffect(() => {
     if (query.trim() === "") {
       setResults([]);
