@@ -1,4 +1,4 @@
-import React, {use, useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import SeachModule from "../components/SearchModule";
 
 
