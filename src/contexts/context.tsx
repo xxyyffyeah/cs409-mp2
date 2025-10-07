@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { ArtWork } from '../components/types'; // 确保 ArtWork 类型被正确导入
+import { ArtWork } from '../components/types';
 
 interface SearchResultsContextType {
   searchResults: ArtWork[];
