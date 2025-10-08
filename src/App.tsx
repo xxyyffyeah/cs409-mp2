@@ -7,6 +7,7 @@ import {
 import styles from './App.module.scss';
 import List from './pages/List';
 import Details from './pages/Details';
+import Gallery from './pages/Gallery';
 import { SearchResultsProvider } from './contexts/context';
 
 function App() {
@@ -37,8 +38,4 @@ function App() {
   );
 }
 
-
-function Gallery() {
-  return <h2>Gallery</h2>;
-}
 export default App;

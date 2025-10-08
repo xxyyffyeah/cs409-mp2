@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+$grey: #1a1a1a;
+$red: #8C2B2D;
+$hover-red: #B34042;
+$light-grey: #f5f5f5;
+$border-grey: #ddd;
+
+.galleryModule {
+  font-family: "Gowun Dodum", sans-serif;
+  color: $grey;
+  padding: 2em 0;
+
+  .categoryFilters {
+    display: flex;
+    gap: 0.8em;
+    margin-bottom: 2em;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .categoryButton {
+      padding: 0.6em 1.5em;
+      border: 1px solid $border-grey;
+      background-color: white;
+      color: $grey;
+      border-radius: 4px;
+      font-size: 0.95em;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: $red;
+        color: $red;
+      }
+
+      &.active {
+        background-color: $red;
+        color: white;
+        border-color: $red;
+      }
+    }
+  }
+
+  .loading,
+  .noResults {
+    text-align: center;
+    padding: 3em;
+    font-size: 1.1em;
+    color: #666;
+  }
+
+  .artworkGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2em;
+    margin-top: 2em;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5em;
+    }
+
+    .artworkCard {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .imageContainer {
+        width: 100%;
+        aspect-ratio: 3/4;
+        overflow: hidden;
+        background-color: $light-grey;
+
+        .artworkImage {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+      }
+
+      &:hover .artworkImage {
+        transform: scale(1.05);
+      }
+
+      .artworkInfo {
+        padding: 1em;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3em;
+
+        .title {
+          font-size: 1em;
+          font-weight: 500;
+          margin: 0;
+          color: $grey;
+          line-height: 1.3;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .artist {
+          font-size: 0.9em;
+          color: #666;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .year {
+          font-size: 0.85em;
+          color: #999;
+          margin: 0;
+        }
+      }
+    }
+  }
+}

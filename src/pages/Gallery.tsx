@@ -1,14 +1,13 @@
-import {useEffect} from "react";
-import SeachModule from "../components/SearchModule";
-
+import { useEffect } from "react";
+import GalleryModule from "../components/GalleryModule";
 
 function Gallery() {
     useEffect(() => {
         document.title = "Art Institute of Chicago Gallery Website - Gallery";
     }, []);
     return (
-        <div className="list">
-            <SeachModule />
+        <div className="gallery">
+            <GalleryModule />
         </div>
     );
 }
